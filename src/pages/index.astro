@@ -1,0 +1,74 @@
+---
+import Layout from "../layouts/Layout.astro";
+
+let file: File | null = null;
+let imageUrl: string = "";
+let result: string = "";
+
+const handleFileChange = (event: Event) => {
+	const target = event.target as HTMLInputElement;
+	if (target.files && target.files[0]) {
+		file = target.files[0];
+		imageUrl = URL.createObjectURL(file);
+	}
+};
+
+const handleExtract = async () => {
+	if (!file) {
+		result = "No file selected!";
+		return;
+	}
+
+	result = "Processing...";
+
+	setTimeout(() => {
+		result = "OCR result goes here.";
+	}, 2000);
+};
+
+const handleRemove = () => {
+	file = null;
+	imageUrl = "";
+	result = "";
+};
+---
+
+<Layout title="Welcome to Astro.">
+	<main>
+		<div class="flex justify-center">
+			<h1 class="font-bold text-4xl text-blue-300">OCR + Astro</h1>
+		</div>
+		<div class="flex justify-center my-5">
+			<input type="file" id="input-file" />
+			{
+				file && (
+					<div class="flex gap-2">
+						<button class="bg-blue-600 text-white p-1 rounded-md">
+							Extract
+						</button>
+						<button class="bg-red-600 text-white p-1 rounded-md">
+							Remove
+						</button>
+					</div>
+				)
+			}
+		</div>
+		{
+			imageUrl && (
+				<div class="flex justify-center my-5">
+					<img alt="Preview" src={imageUrl} width="500px" />
+				</div>
+			)
+		}
+		{
+			result && (
+				<div class="flex justify-center my-5">
+					<h4 class="font-bold text-gray-300 text-2xl block">
+						Result:
+					</h4>
+					<p class="text-white text-justify">{result}</p>
+				</div>
+			)
+		}
+	</main>
+</Layout>
